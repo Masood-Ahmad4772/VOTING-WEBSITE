@@ -5,37 +5,40 @@ import User from "../models/user.model.js";
 
 export const signup = async (req, res) => {
   try {
-    const { name, email, password, role } = req.body;
+    console.log(req.body)
+    const { fullname, email, password, role } = req.body;
 
     const errors = [];
-    if (password.length < 6) errors.push("Password must be at least 6 characters");
-    if (!/[!@#$%&*(),.?":{}|<>]/.test(password)) errors.push("Password must contain at least one special character");
-    
+    if (password.length < 6)
+      errors.push("Password must be at least 6 characters");
+    if (!/[!@#$%&*(),.?":{}|<>]/.test(password))
+      errors.push("Password must contain at least one special character");
+
     if (errors.length) {
       return res.status(400).json({ msg: errors.join(". ") });
     }
-    
 
     const userExists = await User.findOne({ email });
     if (userExists) {
       return res.status(400).json({ msg: "Email already exists" });
     }
 
-    const existingAdmin = await User.findOne({ role: "admin" });
-    if (role === "admin" && existingAdmin) {
-      return res.status(400).json({ msg: "Only one admin is allowed" });
+    if (role === "admin") {
+      const existingAdmin = await User.findOne({ role: "admin" });
+      if (existingAdmin) {
+        return res.status(400).json({ msg: "Only one admin is allowed" });
+      }
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
-    const newUser = new User({ name, email, password: hashedPassword, role });
+    const newUser = new User({ fullname, email, password: hashedPassword, role });
 
     await newUser.save();
-
     generateToken(newUser._id, res);
 
     res.status(201).json({
       _id: newUser._id,
-      name: newUser.name,
+      fullname: newUser.fullname,
       email: newUser.email,
       role: newUser.role,
     });
@@ -45,11 +48,11 @@ export const signup = async (req, res) => {
   }
 };
 
+
+
 export const login = async (req, res) => {
   try {
     const { email, password } = req.body;
-
-
 
     const user = await User.findOne({ email });
 
@@ -108,7 +111,8 @@ export const updateProfile = async (req, res) => {
     console.log("profile is updated");
     res.status(200).json(updatedUser);
   } catch (error) {
-    console.log("error in updatePassword Controler", error);
+   console.error("Error in updateProfile Controller:", error);
+
     res.status(500).json({ msg: "failed to update the password" });
   }
 };
@@ -125,8 +129,9 @@ export const check = async (req, res) => {
 export const getProfile = async (req, res) => {
   try {
     const userId = req.user;
-    const userData = userId.id;
+    const userData = userId._id;
     const user = await User.findById(userData).select("-password");
+    console.log("getprofile:", userData)
     return res.status(200).json(user);
   } catch (error) {
     console.error("error in getProfile-Controller", error.msg);

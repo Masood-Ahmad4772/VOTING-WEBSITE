@@ -31,7 +31,7 @@ Createcandidates: async (candidate) => {
   },
 
   voteCandidate: async (candidateID) => {
-    console.log("candidate id is: ", candidateID);
+    // console.log("candidate id is: ", candidateID);
     try {
       await axiosCandidate.post(`/vote/${candidateID}`);
       toast.success(res.data.msg || "Vote costed successfully!");

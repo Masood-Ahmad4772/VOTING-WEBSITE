@@ -25,7 +25,7 @@ const App = () => {
     checkUser();
   }, [checkUser]);
 
-  if (!checkUser && !authuser)
+  if (isCheckingAuth && !authuser)
     return (
       <div className="flex items-center justify-center h-screen bg-zinc-700">
         <LoaderPinwheel className="size-20 animate-spin " />

@@ -17,6 +17,7 @@ export const UserStore = create((set, get) => ({
     set({ isSigningUp: true });
     try {
       const res = await axiosInstance.post("/signup", data);
+      // console.log("data :", data)
       
       // ✅ Update authuser state with the new cnicStatus
       set((state) => ({
@@ -27,6 +28,7 @@ export const UserStore = create((set, get) => ({
       }));
       
       toast.success("Account Created Successfully");
+      return true
     } catch (error) {
       console.error(
         "Error in SignUp:",
@@ -39,27 +41,26 @@ export const UserStore = create((set, get) => ({
   },
 
 
-  login: async (data) => {
-    set({ isLoggingIn: true });
-    try {
-      const res = await axiosInstance.post("/login", data);
-      
-      // ✅ Ensure cnicStatus is updated on login
-      set((state) => ({
-        authuser: { 
-          ...res.data, 
-          cnicStatus: res.data.cnicStatus || "not Verified"  
-        }
-      }));
-      
-      toast.success("Login Successfully");
-    } catch (error) {
-      console.error("Error in login:", error.response?.data?.msg || error.message);
-      toast.error(error.response?.data?.msg || "An error occurred");
-    } finally {
-      set({ isLoggingIn: false });
-    }
-  },
+login: async (data) => {
+  set({ isLoggingIn: true });
+  try {
+    const res = await axiosInstance.post("/login", data);
+    set((state) => ({
+      authuser: {
+        ...res.data,
+        cnicStatus: res.data.cnicStatus || "not Verified"
+      }
+    }));
+    toast.success("Login Successfully");
+    return true; // ✅ ADD THIS
+  } catch (error) {
+    toast.error(error.response?.data?.msg || "An error occurred");
+    return false; // ✅ ADD THIS
+  } finally {
+    set({ isLoggingIn: false });
+  }
+},
+
 
 
 
@@ -77,15 +78,15 @@ export const UserStore = create((set, get) => ({
   },
 
   getUser: async () => {
-    set({isGettingUser : true});
+    set({isGettingUser : true,});
     try {
-      const res = await axiosInstance.get("/getusers", data);
+      const res = await axiosInstance.get("/getusers");
       set({user: res.data});
     } catch (error) {
       console.log("error in Logout", error);
       toast.error(error.response.data.msg);
     } finally{
-      set({isGettingUser : false});
+      set({isGettingUser : false,});
     }
   },
 
@@ -132,7 +133,7 @@ export const UserStore = create((set, get) => ({
   fetchPendingCNICs: async () => {
     try {
       const res = await axiosInstance.get("/pending-cnics");
-      console.log("Fetched CNICs:", res.data); // ✅ Log response
+      // console.log("Fetched CNICs:", res.data); // ✅ Log response
       return res.data;
     } catch (error) {
       console.error("Error fetching CNICs:", error);

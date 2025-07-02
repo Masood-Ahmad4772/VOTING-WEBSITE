@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 
 const UserSchema = new mongoose.Schema(
   {
-    name: {
+    fullname: {
       type: String,
       required: true,
     },
@@ -33,10 +33,10 @@ const UserSchema = new mongoose.Schema(
       minlength: 6,
     },
     role: {
-      type: String,
-      enum: ["voter", "admin"],
-      default: "voter",
-    },
+    type: String,
+    enum: ["admin","user"], // ← 🚫 ONLY admin allowed here!
+    required: true,
+  },
     isvoted: {
       type: Boolean,
       default: false,

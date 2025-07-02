@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Eye, EyeOff, Lock, Mail } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 import toast, { Toaster } from "react-hot-toast";
 import "react-toastify/dist/ReactToastify.css";
@@ -14,6 +14,8 @@ const Login = () => {
     email: "",
     password: "",
   });
+
+  const navigate = useNavigate()
 
   const { login } = UserStore();
 
@@ -35,7 +37,7 @@ const Login = () => {
     e.preventDefault();
     if (validateForm() === true) {
       const response = await login(formData);
-      if (response) Navigate("/dashboard"); // Redirect only after a successful login
+      if (response) navigate("/profile"); // Redirect only after a successful login
 
     }
   };

@@ -6,7 +6,7 @@ import ShowModel from "../pages/ShowModel";
 const Profile = () => {
   const [selectedImg, setSelectedImg] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const { authuser, isCheckingAuth, isUpdatingProfile, updateprofile, checkUser } = UserStore();
+  const { authuser, isCheckingAuth, isUpdatingProfile, updateprofile, checkUser,isGettingUser } = UserStore();
 
   const handleImageUpload = async (e) => {
     const file = e.target.files[0];
@@ -24,19 +24,22 @@ const Profile = () => {
   };
 
   useEffect(() => {
-    console.log("authuser is:", authuser);
-  }, [authuser]);
+    if (!authuser) {
+      checkUser(); // Fetch user after login/signup
+    }
+  }, []);
 
-  if (isCheckingAuth || !authuser)
+  if (isCheckingAuth || !checkUser || !authuser || isGettingUser) {
     return (
       <div className="h-screen flex items-center justify-center bg-zinc-700">
-        <LoaderPinwheel className="size-20 animate-spin " />
+        <LoaderPinwheel className="size-20 animate-spin text-white" />
       </div>
     );
+  }
 
   return (
-    <div className="min-h-screen flex flex-col items-center py-10 bg-gray-900 overflow-hidden">
-      <div className="max-w-lg w-full bg-zinc-900 text-white rounded-2xl shadow-xl p-6 space-y-4">
+    <div className="min-h-screen flex flex-col items-center py-10 bg-gray-900 overflow-hidden text-white">
+      <div className="max-w-lg w-full bg-zinc-900 rounded-2xl shadow-xl p-6 space-y-4">
         <div className="flex flex-col items-center gap-2">
           <div className="relative">
             <img
@@ -46,9 +49,8 @@ const Profile = () => {
             />
             <label
               htmlFor="avatar-upload"
-              className={`absolute bottom-0 right-0 bg-base-content hover:scale-105
-                p-2 rounded-full cursor-pointer transition-all duration-200
-                ${isUpdatingProfile ? "animate-pulse pointer-events-none" : ""}`}
+              className={`absolute bottom-0 right-0 bg-base-content p-2 rounded-full cursor-pointer transition-all duration-200
+              ${isUpdatingProfile ? "animate-pulse pointer-events-none" : ""}`}
             >
               <Camera className="w-5 h-5 text-base-200" />
               <input
@@ -62,7 +64,7 @@ const Profile = () => {
             </label>
           </div>
           <p className="text-sm text-zinc-400">
-            {isUpdatingProfile ? "Uploading..." : "Click the camera icon to update your photo"}
+            {isUpdatingProfile ? "Uploading..." : "Click the camera to update your photo"}
           </p>
         </div>
 
@@ -73,7 +75,7 @@ const Profile = () => {
               Full Name
             </div>
             <p className="px-4 py-1.5 bg-zinc-800 rounded-lg border border-zinc-700">
-              {authuser.name}
+              {authuser.fullname}
             </p>
           </div>
         </div>
@@ -92,7 +94,7 @@ const Profile = () => {
           </div>
         </div>
 
-        {/* Verification Button */}
+        {/* CNIC Verification for non-admin users */}
         {authuser.role !== "admin" && (
           <div className="flex flex-col items-center space-y-2">
             {authuser.cnicStatus === "approved" ? (

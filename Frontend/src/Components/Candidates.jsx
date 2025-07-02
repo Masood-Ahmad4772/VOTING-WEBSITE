@@ -18,7 +18,7 @@ const Candidate = () => {
     checkCandidates();
   }, [checkCandidates]);
   useEffect(() => {
-    console.log("authuse is:",authuser)
+    // console.log("authuse is:",authuser)
   }, [authuser]);
 
 

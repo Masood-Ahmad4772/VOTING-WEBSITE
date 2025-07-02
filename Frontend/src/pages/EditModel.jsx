@@ -10,7 +10,7 @@ const { updateCandidate,  checkCandidates } = usecandidateStore();
   const [formData, setFormData] = useState({ name: "", party: "", age: "" });
 
   useEffect(() => {
-    console.log("Candidate Data: ", candidate); // Debugging line
+    // console.log("Candidate Data: ", candidate); // Debugging line
     if (candidate?.data && isOpenModel) {
       setFormData({
         name: candidate?.data.name || "",
@@ -37,7 +37,7 @@ const { updateCandidate,  checkCandidates } = usecandidateStore();
   }
 
 
-  console.log(formData)
+  // console.log(formData)
   return (
     <>
       {isOpenModel && (

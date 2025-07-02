@@ -8,9 +8,10 @@ import { UserStore } from "../store/UserStore";
 const Signup = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [formData, setFormData] = useState({
-    name: "",
+    fullname: "",
     email: "",
     password: "",
+    role: "user", // default role
   });
 
   const { signup, isSigningUp } = UserStore();
@@ -18,13 +19,14 @@ const Signup = () => {
 
   const validateForm = () => {
     toast.dismiss();
-    if (!formData.name.trim()) return toast.error("Full name is required");
+    if (!formData.fullname.trim()) return toast.error("Full name is required");
     if (!formData.email.trim()) return toast.error("Email is required");
     if (!/\S+@\S+\.\S+/.test(formData.email))
       return toast.error("Invalid email format");
     if (!formData.password) return toast.error("Password is required");
     if (formData.password.length < 6)
       return toast.error("Password must be at least 6 characters");
+    if (!formData.role) return toast.error("Please select a role"); // ✅ Role check
     return true;
   };
 
@@ -35,6 +37,7 @@ const Signup = () => {
       if (response) Navigate("/candidates");
     }
   };
+  
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-gray-900 text-white">
@@ -64,9 +67,9 @@ const Signup = () => {
                 type="text"
                 className="w-full pl-10 p-2 bg-gray-700 text-white rounded-md focus:outline-none"
                 placeholder="John Doe"
-                value={formData.name}
+                value={formData.fullname}
                 onChange={(e) =>
-                  setFormData({ ...formData, name: e.target.value })
+                  setFormData({ ...formData, fullname: e.target.value })
                 }
               />
             </div>
@@ -110,6 +113,39 @@ const Signup = () => {
               >
                 {showPassword ? <EyeOff /> : <Eye />}
               </button>
+            </div>
+          </div>
+
+          {/* Role Selection */}
+          <div>
+            <label className="block mb-2 font-medium">Select Role</label>
+            <div className="flex gap-6">
+              <label className="flex items-center gap-2">
+                <input
+                  type="radio"
+                  name="role"
+                  value="user"
+                  checked={formData.role === "user"}
+                  onChange={(e) =>
+                    setFormData({ ...formData, role: e.target.value })
+                  }
+                  className="accent-blue-500"
+                />
+                <span>User</span>
+              </label>
+              <label className="flex items-center gap-2">
+                <input
+                  type="radio"
+                  name="role"
+                  value="admin"
+                  checked={formData.role === "admin"}
+                  onChange={(e) =>
+                    setFormData({ ...formData, role: e.target.value })
+                  }
+                  className="accent-blue-500"
+                />
+                <span>Admin</span>
+              </label>
             </div>
           </div>
 
