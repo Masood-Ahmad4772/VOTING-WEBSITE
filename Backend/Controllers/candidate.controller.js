@@ -109,7 +109,7 @@ export const giveVote = async (req, res) => {
       return res.status(400).json({ msg: "admin can't vote" });
 
     // set the candidate to voted
-    candidate.votes.push({ user: userId, name: user.name });
+    candidate.votes.push({ user: userId, name: user.fullname });
     candidate.voteCount++;
     await candidate.save();
     console.log("candidate succefully save");
@@ -144,7 +144,7 @@ export const checkPartyVotes = async (req, res) => {
 export const getCandidate = async (req, res) => {
   try {
     const candidates = await Candidate.find();
-    console.log(candidates);
+    // console.log(candidates);
     return res.status(200).json(candidates);
   } catch (error) {
     console.log("Error in the getCnadidate function", error);

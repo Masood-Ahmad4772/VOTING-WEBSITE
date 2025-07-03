@@ -26,13 +26,11 @@ const Candidate = () => {
   const handleVote = async (id) => {
     try {
       await voteCandidate(id);
-      await authuser() 
       // Manually update authuser state
       UserStore.setState((state) => ({
         authuser: { ...state.authuser, isvoted: true },
       }));
       toast.success("You have voted successfully");
-      checkUser();
       sethasvoted(true);
     } catch (error) {
       console.log("Error voting:", error);

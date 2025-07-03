@@ -30,16 +30,16 @@ Createcandidates: async (candidate) => {
     }
   },
 
-  voteCandidate: async (candidateID) => {
-    // console.log("candidate id is: ", candidateID);
-    try {
-      await axiosCandidate.post(`/vote/${candidateID}`);
-      toast.success(res.data.msg || "Vote costed successfully!");
-    } catch (error) {
-      console.log("error in Votecandidate", error);
-      toast.error(error.response?.data?.msg) || "An error Occur";
-    }
-  },
+ voteCandidate: async (candidateID) => {
+  try {
+    const res = await axiosCandidate.post(`/vote/${candidateID}`);
+    toast.success(res.data.msg || "Vote casted successfully!");
+  } catch (error) {
+    console.log("error in Votecandidate", error);
+    toast.error(error.response?.data?.msg || "An error occurred");
+  }
+},
+
 
 
   VotersRecord: async() => {

@@ -36,6 +36,7 @@ const UserSchema = new mongoose.Schema(
     type: String,
     enum: ["admin","user"], // ← 🚫 ONLY admin allowed here!
     required: true,
+    default: "user",
   },
     isvoted: {
       type: Boolean,

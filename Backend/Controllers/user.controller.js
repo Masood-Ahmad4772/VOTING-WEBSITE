@@ -66,7 +66,6 @@ export const login = async (req, res) => {
     res.status(200).json({
       _id: user._id,
       email: user.email,
-      role: user.role,
     });
   } catch (error) {
     console.error("Error in login controller:", error.message);
@@ -128,16 +127,13 @@ export const check = async (req, res) => {
 
 export const getProfile = async (req, res) => {
   try {
-    const userId = req.user;
-    const userData = userId._id;
-    const user = await User.findById(userData).select("-password");
-    console.log("getprofile:", userData)
+    const user = await User.findById(req.user._id).select("-password");
     return res.status(200).json(user);
   } catch (error) {
-    console.error("error in getProfile-Controller", error.msg);
-    res.status(500).json({ msg: "internal server Error" });
+    res.status(500).json({ msg: "Internal server error" });
   }
 };
+
 
 // cnic verification
 

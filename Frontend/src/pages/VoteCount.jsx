@@ -20,7 +20,7 @@ const VoteCount= () => {
         <table className="w-full border-collapse border border-gray-700">
           <thead>
             <tr className="bg-gray-700 text-white">
-              <th className="py-2 px-4 border border-gray-600">Vote [{voterRecord.length}]</th>
+              <th className="py-2 px-4 border border-gray-600">Vote</th>
               <th className="py-2 px-4 border border-gray-600">party</th>
             </tr>
           </thead>
